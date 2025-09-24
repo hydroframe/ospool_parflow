@@ -28,7 +28,7 @@ To get an account to use OSPool you start by registering with the
 
 After submitted the signup request you will asked to signup for a consultation with
 OSPool. This is a zoom meeting where an OSPool support engineer will give you an
-overview of how OSPools and ask you how you are trying to use it and help you with
+overview of OSPool and ask you how you are trying to use it. They will also help you with
 getting started questions. 
 
 The email response after you submit your signup request will have instructions. It will tell
@@ -42,9 +42,9 @@ After your consultation they will send you an email with your ssh connection inf
 for the access point. The connection information will be:
 
     * accesspointname
-    * usename
+    * username
 
-the access point name they send me was:
+the access point name they sent me was:
    ap40.uw.osg-htc.org
 However, you may be assigned a different access point.
 
@@ -136,7 +136,7 @@ to the access point.
 OSPool uses apptainer to support users to deploy software to their servers.
 Apptainer is the same as singularity, and is similar to docker.
 Although it is similar to docker the definition files are very different and
-the model of how it is used is quite different it also very different.
+the model of how it is used is quite different.
 
 This repo contains a folder containing code to create an apptainer image that contains
 parflow. There are two subfolders to create two different builds of parflow.
@@ -192,7 +192,7 @@ Then you can run parflow directly on the OSPool access point server with the com
     bash run_demo.sh
 
 ## Run Parflow on OSPool Execution Server
-You can run parflow using the apptainer container on on OSPool execution server using Condor.
+You can run parflow on an OSPool execution server using Condor.
 
     condor_submit demo.submit
 
@@ -200,7 +200,7 @@ The condor_submit command is provided by OSPool on the access point server. It c
 used to submit a job just like the sbatch command on HPC using slurm.
 
 The demo.submit command is provided in the ospool_parflow workspace in the demo folder.
-The demo.submit specifies the executable as the run_demo.sh that we used to execute parflow
+The demo.submit specifies the executable as the run_demo.sh file that we used to execute parflow
 on the access point in the previous section.
 
 You can check the queue status of a submitted job using the command.
@@ -217,3 +217,25 @@ the results.
 The stdout of the executing job is also copied back into the file demo.output and any errors
 are copied back into the file demo.errors. This is specified in the demo.submit file we
 used to create the job.
+
+## Run Parflow Using Your Own Project
+
+You can run parflow with your own project in the same way except provide your own demo.py file.
+
+You do not need to use the project.py or the template_runscripts used in this example, but your project
+must collect the input files and create the parflow runscript and run parflow using apptainer
+
+    apptainer exec ../apptainer/mpi/parflow_mpi.sif python <your_project.py>
+
+Any files in the directory you use to submit a job with condor will be available to your code.
+
+If you need to install your own custom python components you need to pip install them into the
+container loaded from parflow_mpi.sif. You can do that by creating a script like myproject.sh
+that does the pip installs and then runs your python program.
+
+    myproject.sh
+        python -m pip install mycomponent1 mycomponent2
+        python myproject.py
+
+Then run parflow using
+    apptainer exec ../apptainer/mpi/parflow_mpi.sif myproject.sh
