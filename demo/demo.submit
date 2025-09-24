@@ -1,0 +1,24 @@
+# Our executable is the main program or script that we've created
+# to do the 'work' of a single job.
+executable = run_demo.sh
+
+# We need to name the files that HTCondor should create to save the
+#  terminal output (stdout) and error (stderr) created by our job.
+#  Similarly, we need to name the log file where HTCondor will save
+#  information about job execution steps.
+log = demo.log
+error = demo.error
+output = demo.output
+
+# This is the default category for jobs
++JobDurationCategory = "Medium"
+
+# The below are good base requirements for first testing jobs on OSG, 
+#  if you don't have a good idea of memory and disk usage.
+request_cpus = 1
+request_memory = 1 GB
+request_disk = 1 GB
+
+# The last line of a submit file indicates how many jobs of the above
+#  description should be queued. We'll start with one job.
+queue 1

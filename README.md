@@ -1,6 +1,6 @@
-# Instructions to run Parflow using OSPool
+# Repo Containing Instructions to run Parflow using OSPool
 
-This repo contains instructions how to run parflow on OSPool.
+This repo contains instructions how to run parflow using OSPool servers.
 
 
 ## Introduction
@@ -39,13 +39,18 @@ You will get a reminder about your appointment and eventually (probably day of y
 they will send you a zoom link or a google meet link.
 
 After your consultation they will send you an email with your ssh connection information
-for the access point. The access point they send me was:
+for the access point. The connection information will be:
+
+    * accesspointname
+    * usename
+
+the access point name they send me was:
    ap40.uw.osg-htc.org
-However, you may be assigned a different access point. You will also be given a user name.
+However, you may be assigned a different access point.
 
 ## Connecting to Access Point
 
-The first time you use ssh to the access point you must use browser based authentication.
+The first time you use ssh to the OSPool access point you must use browser based authentication.
 After you are connected the first time you can setup your certificates in your .ssh directory
 so you can later use public/private key authentication.
 
@@ -124,7 +129,7 @@ You should also be able to use git clone while logged on the access point to pul
 access point. In particular you should be able to pull a copy of this repo with the examples
 to the access point.
 
-    git clone git@github.com:wh3248/ospool_parflow.git
+    git clone git@github.com:hydroframe/ospool_parflow.git
 
 # Appttainer
 
@@ -171,6 +176,44 @@ You can run a demonstration of using parflow on an OSPool server by cloning this
 access point and then copying the .sif file to the demo folder of that cloned workspaces and
 then run the parflow demo on the OSPool server.
 
+First ssh to your access point server and clone this repo using this command on the access point.
 
+    mkdir ~/workspaces
+    cd ~/workspaces
+    git clone git@github.com:hydroframe/ospool_parflow.git
 
+Then from your linux server where you have the sif file use scp to copy the .sif file to the demo directory of the clone workspace.
 
+    scp parflow_mpi.sif username@accesspointname:/user/username/ospool_parflow/demo
+
+Then you can run parflow directly on the OSPool access point server with the command:
+
+    cd ~/workspaces/ospool_parflow/demo
+    bash run_demo.sh
+
+## Run Parflow on OSPool Execution Server
+You can run parflow using the apptainer container on on OSPool execution server using Condor.
+
+    condor_submit demo.submit
+
+The condor_submit command is provided by OSPool on the access point server. It can be
+used to submit a job just like the sbatch command on HPC using slurm.
+
+The demo.submit command is provided in the ospool_parflow workspace in the demo folder.
+The demo.submit specifies the executable as the run_demo.sh that we used to execute parflow
+on the access point in the previous section.
+
+You can check the queue status of a submitted job using the command.
+
+    condor_q
+
+If the Idle column is "1" then the job is still in the queue and not executing. It typically
+takes 2 minutes or so until a job starts running.
+
+The current directory when you submit a job is copied to the execution server when the job runs.
+After the job completes the same directory is copied back to the access point so you can see
+the results.
+
+The stdout of the executing job is also copied back into the file demo.output and any errors
+are copied back into the file demo.errors. This is specified in the demo.submit file we
+used to create the job.
