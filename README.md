@@ -187,33 +187,47 @@ Then from your linux server where you have the sif file use scp to copy the .sif
     cd /home/SHARED/virtual-environments
     scp parflow_mpi.sif username@accesspointname:/user/username/ospool_parflow/demo
 
-Then you can run parflow directly on the OSPool access point server with the command:
+Then you can run parflow directly on the OSPool access point server with the command.
+You must first set your hf_hydrodata email and point that is used by demo.py
 
+
+    export HF_EMAIL=xxxx
+    export HF_PIN=nnnn
     cd ~/workspaces/ospool_parflow/demo
     bash run_demo.sh
 
 ## Run Parflow on OSPool Execution Server
 You can run parflow on an OSPool execution server using Condor.
+You need to first edit the demo.sh file with your hf_hydrodata email and pin so this is passed to the nodes.
 
     condor_submit demo.submit
 
 The condor_submit command is provided by OSPool on the access point server. It can be
 used to submit a job just like the sbatch command on HPC using slurm.
 
-The demo.submit command is provided in the ospool_parflow workspace in the demo folder.
-The demo.submit specifies the executable as the run_demo.sh file that we used to execute parflow
-on the access point in the previous section.
+The demo.submit file is provided in the ospool_parflow workspace in the demo folder.
+The demo.submit specifies the executable as the demo.sh file that runs our python demo.py.
+The parflow_mpi.sif container to use on the nodes is also specified in the demo.submit file.
 
 You can check the queue status of a submitted job using the command.
 
     condor_q
 
 If the Idle column is "1" then the job is still in the queue and not executing. It typically
-takes 2 minutes or so until a job starts running.
+takes 2 minutes or so until a job starts running. If the Hold column is "1" the job is on hold
+and not running yet. If the Run column is "1" then the job is still running.
 
-The current directory when you submit a job is copied to the execution server when the job runs.
-After the job completes the same directory is copied back to the access point so you can see
-the results.
+The selected files in your current directory are copied to the execution server when the job runs.
+These files are specified in the demo.submit file.
+
+You can cancel a job using the job Id of the job using.
+
+    condor_rm <job_id>
+
+After the job is complete the selected files are copied back to the access point so you can see the results.
+These files are also specified in the demo.submit file. In the demo this is output.tar.gz.
+
+See [documentation](https://portal.osg-htc.org/documentation/htc_workloads/managing_data/file-transfer-via-htcondor/).
 
 The stdout of the executing job is also copied back into the file demo.output and any errors
 are copied back into the file demo.errors. This is specified in the demo.submit file we
@@ -221,22 +235,21 @@ used to create the job.
 
 ## Run Parflow Using Your Own Project
 
-You can run parflow with your own project in the same way except provide your own demo.py file.
+You can run parflow with your own project in the same way except provide your own demo.py demo.submit and demo.sh file.
 
 You do not need to use the project.py or the template_runscripts used in this example, but your project
-must collect the input files and create the parflow runscript and run parflow using apptainer
+must collect the input files in your version of demo.py and you must list the source files you need in your
+version of demo.py in your version of demo.submit file.
 
-    apptainer exec ../apptainer/mpi/parflow_mpi.sif python <your_project.py>
-
-Any files in the directory you use to submit a job with condor will be available to your code.
 
 If you need to install your own custom python components you need to pip install them into the
-container loaded from parflow_mpi.sif. You can do that by creating a script like myproject.sh
-that does the pip installs and then runs your python program.
+container loaded from parflow_mpi.sif. You can do that in your version of demo.sh such as myjob.sh.
 
-    myproject.sh
+    myjob.sh
         python -m pip install mycomponent1 mycomponent2
         python myproject.py
 
-Then run parflow using
-    apptainer exec ../apptainer/mpi/parflow_mpi.sif myproject.sh
+Then use condor_submit to submit your job.
+
+    condor_submit myjob.submit
+

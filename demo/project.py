@@ -87,8 +87,12 @@ def create_project(project_options: dict, directory_path: str = "project_dir") -
         base_dir = os.path.dirname(os.path.abspath(__file__))
         if run_type == "transient":
             template = f"{base_dir}/template_runscripts/conus2_transient_solid.yaml"
+            if not os.path.exists(template):
+                template = f"{base_dir}/conus2_transient_solid.yaml"
         elif run_type == "spinup":
             template = f"{base_dir}/template_runscripts/conus2_spinup_solid.yaml"
+            if not os.path.exists(template):
+                template = f"{base_dir}/conus2_spinup_solid.yaml"
         elif run_type:
             raise ValueError(
                 f"Unsupported run_type '{run_type}'. Must be transient or spinup."

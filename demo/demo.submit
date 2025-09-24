@@ -1,6 +1,8 @@
 # Our executable is the main program or script that we've created
 # to do the 'work' of a single job.
-executable = run_demo.sh
+container_image = parflow_mpi.sif
+executable = demo.sh
+
 
 # We need to name the files that HTCondor should create to save the
 #  terminal output (stdout) and error (stderr) created by our job.
@@ -18,6 +20,10 @@ output = demo.output
 request_cpus = 1
 request_memory = 1 GB
 request_disk = 1 GB
+
+# Copy files to execution server
+transfer_input_files = demo.sh, run_demo.sh, template_runscripts/conus2_transient_solid.yaml, demo.py, project.py
+transfer_output_files = output.tar.gz
 
 # The last line of a submit file indicates how many jobs of the above
 #  description should be queued. We'll start with one job.
