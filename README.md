@@ -1,4 +1,4 @@
-# Repo Containing Instructions to run Parflow using OSPool
+# Run Parflow using OSPool
 
 This repo contains instructions how to run parflow using OSPool servers.
 
