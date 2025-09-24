@@ -5,4 +5,4 @@
 #
 # The parflow input and output files are stored in the directory called demo in this dirctory.
 
-apptainer exec ../apptainer/mpi/parflow_mpi.sif python demo.py
+apptainer exec parflow_mpi.sif python demo.py

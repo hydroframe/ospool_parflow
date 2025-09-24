@@ -131,7 +131,7 @@ to the access point.
 
     git clone git@github.com:hydroframe/ospool_parflow.git
 
-# Appttainer
+# Apptainer
 
 OSPool uses apptainer to support users to deploy software to their servers.
 Apptainer is the same as singularity, and is similar to docker.
@@ -184,6 +184,7 @@ First ssh to your access point server and clone this repo using this command on 
 
 Then from your linux server where you have the sif file use scp to copy the .sif file to the demo directory of the clone workspace.
 
+    cd /home/SHARED/virtual-environments
     scp parflow_mpi.sif username@accesspointname:/user/username/ospool_parflow/demo
 
 Then you can run parflow directly on the OSPool access point server with the command:

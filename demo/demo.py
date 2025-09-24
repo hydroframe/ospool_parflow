@@ -4,6 +4,7 @@
     Then run parflow using that project directory.
 """
 
+import os
 import project
 import parflow
 import hf_hydrodata as hf
@@ -18,7 +19,12 @@ def main():
     duration_start = time.time()
 
     # Set email and pin of hf_hydrodata to gain access to parflow input files
-    hf.register_api_pin("<your_hf_hydrodata_email>, "<your_hf_hydrodata_pin"")
+    email = os.getenv("HF_EMAIL")
+    pin = os.getenv("HF_PIN")
+    if not email or not pin:
+        print("Set environment variables HF_EMAIL and HF_PIN before running")
+        return
+    hf.register_api_pin(email, pin)
     directory_path = "./demo"
 
     # Create a parflow project directory populated with input files
@@ -29,7 +35,7 @@ def main():
         "start_date": "2005-10-01",
         "end_date": "2005-10-02",
         "time_steps": time_steps,
-        "topology": [5, 5, 1]
+        "topology": [2, 2, 1]
     }
     # Use the utility "create_project" that uses subsettools to get the input files
     runscript_path = project.create_project(parflow_options, directory_path)
@@ -56,11 +62,12 @@ def main():
     x = int(nx / 2)
     y = int(ny / 2)
     z = nz - 1
+    runname = os.path.basename(directory_path)
     out_path = f"{directory_path}/{runname}.out.press.{time_step:05d}.pfb"
     out_press_np = parflow.read_pfb(out_path)
     print(f"OUT PRESS ({z},{y},{x}) {out_press_np[z, y, x]} [{time_step}]")
     top_layer_pressure = out_press_np
-    #assert round(top_layer_pressure[z, y, x], 5) == 0.00325
+    assert round(top_layer_pressure[z, y, x], 5) == 0.00099
 
    
 main()
