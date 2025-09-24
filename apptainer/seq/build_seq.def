@@ -1,0 +1,6 @@
+#
+# Script to build the parflow_seq.sif apptainer image containing parflow without MPI.
+#
+rm -rf parflow_seq.sif parflow_seq.log
+apptainer build parflow_seq.sif parflow_seq.def 2>&1 | tee parflow_seq.log
+
