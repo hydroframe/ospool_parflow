@@ -12,8 +12,9 @@ import time
 
 def main():
     """
-    An example generating a parflow directory and execute model and assert start/end pressure values for a box
-    Use a box with radius 5 around the same target point that is the center of HUC 02080203
+    An example generating a parflow directory and populated using subsettools and runs parflow in a transient run.
+    It then asserts then end pressure values of a point in the domain.
+    Is uses a domain from a HUC "02070001".
     """
 
     duration_start = time.time()
@@ -37,7 +38,7 @@ def main():
         "time_steps": time_steps,
         "topology": [2, 2, 1]
     }
-    # Use the utility "create_project" that uses subsettools to get the input files
+    # Use the function "create_project" from the project module to use subsettools to get the input files
     runscript_path = project.create_project(parflow_options, directory_path)
 
     # Run the parflow model

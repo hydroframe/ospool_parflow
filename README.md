@@ -22,6 +22,15 @@ using a single execution node. You can submit jobs to run using multiple executi
 OSPool is free for accademic researchers and can be useful for researchers that want to use
 parflow for medium sized simulations, but do not have access to an HPC.
 
+The support email from the OSPool team is: support@osg-htc.org.
+
+They have office hours.
+Signup for OSPool office hours [here](https://docs.google.com/forms/d/e/1FAIpQLSd3K78Xx1Vo-KjqW_2y0YKcUMXrEsKXWk3I1Aww64RL22QpnQ/viewform).
+
+    Tuesdays, 4-5:30pm ET / 1-2:30pm PT
+    Thursdays, 11:30am-1pm ET / 8:30-10am PT
+    
+
 ## Signup For OSPool
 To get an account to use OSPool you start by registering with the 
 [signup]( https://portal.osg-htc.org/application#:~:text=If%20you%20are%20a%20researcher%20affiliated%20with,for%20you%20to%20harness%2C%20just%20sign%20up!) web site.
@@ -44,9 +53,11 @@ for the access point. The connection information will be:
     * accesspointname
     * username
 
-the access point name they sent me was:
+The access point name they sent me was:
    ap40.uw.osg-htc.org
 However, you may be assigned a different access point.
+
+I was given 41 GB of disk space quota when I signed up. You could negotiate for more with a good reason I think.
 
 ## Connecting to Access Point
 
@@ -82,7 +93,7 @@ You should then create files on the access point server in the .ssh folder the h
 Copy the contents of the files id_ed25519.pub and id_ed25519 from your laptop or linux server .ssh folder to
 the files in the OSPool access point.
 
-One way to copy the files is to put the contents of the ~/.ssh/id_ed25519.pub file on your laptop into your clip board. Then execute:
+One way to copy the files is to put the contents of the ~/.ssh/id_ed25519.pub file from your laptop or linux server into your clipboard. Then execute:
 
     cat > ~/.ssh_id_ed25519.pub
     <right click>
@@ -90,7 +101,7 @@ One way to copy the files is to put the contents of the ~/.ssh/id_ed25519.pub fi
 
 Note: ^D means control D key. This is the end of file character.
 
-Then copy the contents of the ~/.ssh/id_ed25519 file on your laptop into your clip board. Then execute:
+Then copy the contents of the ~/.ssh/id_ed25519 file from your laptop or linux server into your clip board. Then execute:
 
     cat > ~/.ssh_id_ed25519
     <right click>
@@ -185,16 +196,18 @@ First ssh to your access point server and clone this repo using this command on 
 Then from your linux server where you have the sif file use scp to copy the .sif file to the demo directory of the clone workspace.
 
     cd /home/SHARED/virtual-environments
-    scp parflow_mpi.sif username@accesspointname:/user/username/workspaces/ospool_parflow/demo
+    scp parflow_mpi.sif <username>@<accesspointname>:/user/<username>/workspaces/ospool_parflow/demo
 
 Then you can run parflow directly on the OSPool access point server with the command.
-You must first set your hf_hydrodata email and point that is used by demo.py
+You must first set your hf_hydrodata email and pin that is used by demo.py
 
 
     export HF_EMAIL=xxxx
     export HF_PIN=nnnn
     cd ~/workspaces/ospool_parflow/demo
     bash run_demo.sh
+
+The run_demo.sh script runs a python script "demo.py" (from this repo) that uses subsettools to pull input data of a HUC to a project directory and then runs parflow using that directory.
 
 ## Run Parflow on OSPool Execution Server
 You can run parflow on an OSPool execution server using Condor.
