@@ -168,7 +168,7 @@ You can build your own apptainer image of parflow from any linux server that has
 You can build it with scripts from this repo. Below shows how to build the MPI image.
 
     cd apptainer/mpi
-    bash build_map.sh
+    bash build_mpi.sh
 
 This can take several minutes. It displays the log to stdout and also writes the log of the build
 into the file parflow_mpi.log that you can use to see errors if the build fails.
