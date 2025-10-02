@@ -273,7 +273,7 @@ this code in your demo.py file after calling create_project() to create the runs
     model.write(file_format="yaml")
 
 You can add code in your version of demo.py to construct or download your my_ss_pressure_head.pfb
-Using substtools or hf_hydrodata or some other code to construct a custom initial pressure head
+using substtools or hf_hydrodata or some other code to construct a custom initial pressure head
 for the parflow run. You could also add a "template" option to the parflow_options to specify
 a custom version of parflow.yaml with custom values for all the parflow settings values if you wish.
 
