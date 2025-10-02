@@ -262,7 +262,26 @@ container loaded from parflow_mpi.sif. You can do that in your version of demo.s
         python -m pip install mycomponent1 mycomponent2
         python myproject.py
 
+If you do use project.py and the create_project() function to create your parflow directory you
+can set custom values of any parflow setting file from the runscript that is initialized by the
+parflow template used for the project. For example, you can set the initial pressure head with
+this code in your demo.py file after calling create_project() to create the runscript_path:
+
+    runscript_path = project.create_project(parflow_options, directory_path)
+    model = parflow.Run.from_definition(runscript_path)
+    model.domain.ICPressure.FileName = "my_ss_pressure_head.pfb"
+    model.write(file_format="yaml")
+
+You can add code in your version of demo.py to construct or download your my_ss_pressure_head.pfb
+Using substtools or hf_hydrodata or some other code to construct a custom initial pressure head
+for the parflow run. You could also add a "template" option to the parflow_options to specify
+a custom version of parflow.yaml with custom values for all the parflow settings values if you wish.
+
 Then use condor_submit to submit your job.
 
     condor_submit myjob.submit
+
+This will execute your parflow run on an OSPool execution node and download the result files back
+to your access node as specified in your version of demo.submit.
+
 
