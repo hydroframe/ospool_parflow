@@ -59,164 +59,115 @@ However, you may be assigned a different access point.
 
 I was given 41 GB of disk space quota when I signed up. You could negotiate for more with a good reason I think.
 
-## Connecting to Access Point
-
-The first time you use ssh to the OSPool access point you must use browser based authentication.
-After you are connected the first time you can setup your certificates in your .ssh directory
-so you can later use public/private key authentication.
-
-### Browser based Connection
-
-Connect from using the command line.
-
-    ssh <username>@<accesspointname>
-
-This will respond with a message like:
-
-Authenticate at
-   https://cilogon.org/device/?user_code=FF4-ZX6-9LK
-   Type 'Enter' when you authenticate.
-
-Browse to that url. Enter your credentials from your own instition. You use the account
-associated with the email address you provided when you originally signup.
-
-Then press Enter in the shell script command you started with "ssh".
-
-After this you should be connected to the access point.
-
-You should then create files on the access point server in the .ssh folder the home directory of your access point.
-
-    mkdir ~/.ssh
-    touch ~/.ssh/id_ed25519.pub
-    touch ~/.ssh/id_ed25519
-
-Copy the contents of the files id_ed25519.pub and id_ed25519 from your laptop or linux server .ssh folder to
-the files in the OSPool access point.
-
-One way to copy the files is to put the contents of the ~/.ssh/id_ed25519.pub file from your laptop or linux server into your clipboard. Then execute:
-
-    cat > ~/.ssh_id_ed25519.pub
-    <right click>
-    ^D
-
-Note: ^D means control D key. This is the end of file character.
-
-Then copy the contents of the ~/.ssh/id_ed25519 file from your laptop or linux server into your clip board. Then execute:
-
-    cat > ~/.ssh_id_ed25519
-    <right click>
-    ^D
-
-
-After you copy the files then copy the public key to the authorized_keys file
-
-    cd ~/.ssh
-    cp id_ed25519.pub authorized_keys
-
-Finally make sure all the files have the correct permissions:
-
-    cd ~/.ssh
-    chmod 700 *
-
 ### Certificate based Connection
 
-After you added all the ssh keys and logout of the access point you should now be be able
-to ssh from your laptop or linux server to the access point using the command:
+The instruction from the OSPool email will tell you to click [here](https://portal.osg-htc.org/documentation/overview/account_setup/comanage-access/) for instructions to connect to OSPool.
+These instructions give you options to connect with a browser based connection or an ssh key.
+The best way to connect is with an ssh key. You probably have an ssh public/private key in your .ssh folder on your laptop and/or verde.princeton.edu. 
+
+To register your ssh keys with OSPool their
+instructions will have you go to a [registration page](https://registry.cilogon.org/registry).
+You will need to authenticate with CILogin. Select "Princeton University" as the identity provider (or the identity provider of the email you used when you signed up with OSPool). This will take you to the registration page. On that page use the pull down menu at the top right "head" icon and pick "MY PROFILE (OSG)". 
+From the next page select "Authenticators" and click "Manage" on the line with "SSH Keys".
+There are pictures of this in the OSPool instructions [here](https://portal.osg-htc.org/documentation/overview/account_setup/comanage-access/).
+
+From the Manage page press "Add SSH Key" and upload your public SSH key.
+Your key should be on your machine in the directory:
+
+    .ssh/id_ed25519.pub
+
+After this you should now be be able 
+to ssh from your laptop or linux server to the access point using the command below.
+Use the username and accesspoint server name emailed to you by OSPool.
 
     ssh <username>@<accesspoint>
 
-And it should not prompt you for password since your public key is in the authorized_keys file.
+You also should be able to copy files to the access point server using scp.
 
-### Copying Files to the Access Point Server
+Use this ability to copy your public/private keys to the access point server so you
+can use GIT on OSPool server to clone workspaces and commit code from the OSPool access point.
 
-Once you have setup certificate based connection
-you should also be able to copy files to the access point from your laptop or linux server using scp.
+From your laptop or linux machine.
 
-    scp <file> <username>@<accesspoint>:/user/<username>/<file>
+    cd
+    cd .ssh
+    scp id_ed25519.pub <username>@<accesspoint>:/home/<username>/.ssh
+    scp id_ed25519 <username>@<accesspoint>:/home/<username>/.ssh
 
-You should also be able to use Visual Studio code to remote connect to the access point.
+With these keys on the OSPool access point you can clone and commit Git repos from the accesspoint.
+
+### Visual Studio Code
+
+Once you have setup the certificate based connection ability you should be
+able to use Visual Studio Code to connect to the OSPool server from your laptop.
+You can use this IDE to edit files on the OSPool access point server and a terminal to submit OSPool jobs.
+
+### Clone Examples
 
 You should also be able to use git clone while logged on the access point to pull code to the
 access point. In particular you should be able to pull a copy of this repo with the examples
-to the access point.
+to the access point. Connect to the access point with ssh or with Visual Studio Code and a terminal window
+and then execute this command to clone the repo with the examples.
 
     git clone git@github.com:hydroframe/ospool_parflow.git
+
 
 # Apptainer
 
 OSPool uses apptainer to support users to deploy software to their servers.
-Apptainer is the same as singularity, and is similar to docker.
-Although it is similar to docker the definition files are very different and
-the model of how it is used is quite different.
-
-This repo contains a folder containing code to create an apptainer image that contains
-parflow. There are two subfolders to create two different builds of parflow.
-
-    1. Parflow build with OpenMPI.
-    2. Parflow built with the sequential (non-mpi) version of parflow.
-
-Although OSPool does support some execution nodes with GPUs the servers may contain different
-versions of GPU so it is difficult to create parflow GPU builds for all possible GPU types
-so the GPU apptainer image was not create yet.
+This is how we run parflow on OSPool servers.
 
 All OSPool nodes are installed with apptainer so if you copy an apptainer image to
 the OSPool access point it can be used to run parflow in OSPool.
 
-# Building a Parflow Apptainer Image
+See [Building Apptainer Image](#building-a-parflow-apptainer-image) to build your own apptainer image.
+There is also a pre-built apptainer image for parflow on verde.princeton.edu.
 
-You can build your own apptainer image of parflow from any linux server that has apptainer installed.
-You can build it with scripts from this repo. Below shows how to build the MPI image.
+    /home/SHARED/virtual-environments/parflow_mpi.sif
 
-    cd apptainer/mpi
-    bash build_mpi.sh
-
-This can take several minutes. It displays the log to stdout and also writes the log of the build
-into the file parflow_mpi.log that you can use to see errors if the build fails.
-
-When the build succeeeds it creates a file called parflow_mpi.sif. The .sif file is an
-apptainer image.
-
-In princeton there is an already built parflow_mpi.sif on the server named verde.princeton.edu in the
-folder below. The .sif files is about 800 MB.
-
-    /home/SHARED/virtual_environments/parflow_mpi.sif
 
 # Copy .sif file to OSPool access point
 
-You can run a demonstration of using parflow on an OSPool server by cloning this repo to your
-access point and then copying the .sif file to the demo folder of that cloned workspaces and
+To run the demonstration using parflow on an OSPool server you must clone the example repo to your
+access point. You must also copy a .sif file of the apptainer image to the demo folder of that cloned workspaces and
 then run the parflow demo on the OSPool server.
 
-First ssh to your access point server and clone this repo using this command on the access point.
+Any files you copy to the access point server are persisted as long as you have your OSPool account.
+
+Use ssh to connect to your access point server and clone this repo using these commands on the access point server.
 
     mkdir ~/workspaces
     cd ~/workspaces
     git clone git@github.com:hydroframe/ospool_parflow.git
 
-Then from your linux server where you have the sif file use scp to copy the .sif file to the demo directory of the clone workspace.
+Then back on your linux server where you have the sif file,  use scp to copy the .sif file to the demo directory of the clone workspace.
+
+For example, from the verde.princeton.edu server use the pre-built .sif.
 
     cd /home/SHARED/virtual-environments
     scp parflow_mpi.sif <username>@<accesspointname>:/user/<username>/workspaces/ospool_parflow/demo
 
-Then you can run parflow directly on the OSPool access point server with the command.
-You must first set your hf_hydrodata email and pin that is used by demo.py
-
+Then you can run parflow directly on the OSPool access point server with the commands below.
+In these commands you must set your hf_hydrodata email and pin that is used by demo.py
 
     export HF_EMAIL=xxxx
     export HF_PIN=nnnn
     cd ~/workspaces/ospool_parflow/demo
     bash run_demo.sh
 
-The run_demo.sh script runs a python script "demo.py" (from this repo) that uses subsettools to pull input data of a HUC to a project directory and then runs parflow using that directory.
+The run_demo.sh script runs a python script "demo.py" (from this repo) that uses subsettools to pull input data of a HUC to a project directory and then runs parflow using that directory. The run_demo.sh file executes the parflow run directly on the
+OSPool access point server (only do this with small runs).
 
 ## Run Parflow on OSPool Execution Server
-You can run parflow on an OSPool execution server using Condor.
+You can also run parflow on an OSPool execution server using Condor.
+You can use an execution server for larger runs.
 You need to first edit the demo.sh file with your hf_hydrodata email and pin so this is passed to the nodes.
+Execute the following command from OSPool access point.
 
     condor_submit demo.submit
 
 The condor_submit command is provided by OSPool on the access point server. It can be
-used to submit a job just like the sbatch command on HPC using slurm.
+used to submit a job just like the sbatch command on an HPC using slurm.
 
 The demo.submit file is provided in the ospool_parflow workspace in the demo folder.
 The demo.submit specifies the executable as the demo.sh file that runs our python demo.py.
@@ -285,3 +236,37 @@ This will execute your parflow run on an OSPool execution node and download the 
 to your access node as specified in your version of demo.submit.
 
 
+# Building a Parflow Apptainer Image
+
+The apptainer tool is similar to docker, but the model and definitions files are quite different.
+Each of docker, singularity and apptainer allow you to build an image of an operating system
+and all installed tools and libraries so you can run code on any linux server. The various OSPool servers
+are all contributed from various instituations around the world and can have very different environments.
+Apptainer allows the ability to run an application (such as parflow) on any of these servers.
+
+This repo contains a folder containing code to create an apptainer image that contains
+parflow. There are two subfolders to create two different builds of parflow in different images.
+
+    1. Parflow built with OpenMPI.
+    2. Parflow built with the sequential (non-mpi) version of parflow.
+
+Although OSPool does support some execution nodes with GPUs these servers may contain different
+versions of GPU so it is difficult to create parflow GPU builds for all possible GPU types
+so the GPU apptainer image was not create yet.
+
+You can build your own apptainer image of parflow from any linux server that has apptainer installed.
+You can build it with scripts from this repo. Below shows how to build the MPI image.
+
+    cd apptainer/mpi
+    bash build_mpi.sh
+
+This can take several minutes. It displays the log to stdout and also writes the log of the build
+into the file parflow_mpi.log that you can use to see errors if the build fails.
+
+When the build succeeeds it creates a file called parflow_mpi.sif. The .sif file is an
+apptainer image.
+
+In princeton there is an already built parflow_mpi.sif on the server named verde.princeton.edu in the
+folder below. The .sif files is about 800 MB.
+
+    /home/SHARED/virtual_environments/parflow_mpi.sif
