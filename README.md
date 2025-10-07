@@ -109,8 +109,9 @@ access point. In particular you should be able to pull a copy of this repo with 
 to the access point. Connect to the access point with ssh or with Visual Studio Code and a terminal window
 and then execute this command to clone the repo with the examples.
 
+    mkdir -p ~/workspaces
+    cd ~/workspaces
     git clone git@github.com:hydroframe/ospool_parflow.git
-
 
 # Apptainer
 
