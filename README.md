@@ -118,42 +118,38 @@ and then execute this command to clone the repo with the examples.
 OSPool uses apptainer to support users to deploy software to their servers.
 This is how we run parflow on OSPool servers.
 
-All OSPool nodes are installed with apptainer so if you copy an apptainer image to
-the OSPool access point it can be used to run parflow in OSPool.
+Previously we built and copied an apptainer image containing parflow to the OSPool server
+and stored this in a shared parflow project folder. You can see the file when you as ssh
+connected to the access point.
 
+    ls /ospool/uw-shared/projects/parflow/parflow_mpi_2025_10_01.sif
+
+This apptainer image was built using code in this repo.
 See [Building Apptainer Image](#building-a-parflow-apptainer-image) to build your own apptainer image.
-There is also a pre-built apptainer image for parflow on verde.princeton.edu.
-
-    /home/SHARED/virtual-environments/parflow_mpi.sif
 
 
-# Copy .sif file to OSPool access point
+# Clone the demo to the OSPool Server
 
 To run the demonstration using parflow on an OSPool server you must clone the example repo to your
-access point. You must also copy a .sif file of the apptainer image to the demo folder of that cloned workspaces and
-then run the parflow demo on the OSPool server.
+access point. 
 
 Any files you copy to the access point server are persisted as long as you have your OSPool account.
 
-Use ssh to connect to your access point server and clone this repo using these commands on the access point server.
+Use ssh to connect to your access point server. Then use GIT to clone this repo using these commands:
 
-    mkdir ~/workspaces
-    cd ~/workspaces
     git clone git@github.com:hydroframe/ospool_parflow.git
 
-Then back on your linux server where you have the sif file,  use scp to copy the .sif file to the demo directory of the clone workspace.
 
-For example, from the verde.princeton.edu server use the pre-built .sif.
-
-    cd /home/SHARED/virtual-environments
-    scp parflow_mpi.sif <username>@<accesspointname>:/user/<username>/workspaces/ospool_parflow/demo
-
-Then you can run parflow directly on the OSPool access point server with the commands below.
-In these commands you must set your hf_hydrodata email and pin that is used by demo.py
+The demo uses hf_hydrodata to download parflow input files. This needs your email and PIN.
+So before running the demo set your email and pin for hf_hydrodata. Edit the file "demo.sh" in the demo folder
+and edit the lines
 
     export HF_EMAIL=xxxx
     export HF_PIN=nnnn
-    cd ~/workspaces/ospool_parflow/demo
+
+You can do a test run of parflow directly on the access point (like running on Verde head node).
+
+    cd ospool_parflow/demo
     bash run_demo.sh
 
 The run_demo.sh script runs a python script "demo.py" (from this repo) that uses subsettools to pull input data of a HUC to a project directory and then runs parflow using that directory. The run_demo.sh file executes the parflow run directly on the
@@ -190,13 +186,17 @@ You can cancel a job using the job Id of the job using.
     condor_rm <job_id>
 
 After the job is complete the selected files are copied back to the access point so you can see the results.
-These files are also specified in the demo.submit file. In the demo this is output.tar.gz.
+These files are also specified in the demo.submit file. 
+
+The pressure files from the parflow run are returned back from the job into the file:
+
+    output.tar.gz
+
+Any errors are returned into the file "demo.error" and any stdout results of the job are in "demo.output".
+These files are all specified in the demo.submit.
 
 See [documentation](https://portal.osg-htc.org/documentation/htc_workloads/managing_data/file-transfer-via-htcondor/).
 
-The stdout of the executing job is also copied back into the file demo.output and any errors
-are copied back into the file demo.errors. This is specified in the demo.submit file we
-used to create the job.
 
 ## Run Parflow Using Your Own Project
 

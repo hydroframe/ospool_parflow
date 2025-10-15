@@ -1,14 +1,11 @@
-# Our executable is the main program or script that we've created
-# to do the 'work' of a single job.
+# OSPool Condor Submit File to submit a job to run the parflow demo program
+
 # Use the shared parflow container image from the "parflow" projects folder
+# Note - it is not necessary to download a .sif file
 container_image = /ospool/uw-shared/projects/parflow/parflow_mpi_2025_10_01.sif
 executable = demo.sh
 
-
-# We need to name the files that HTCondor should create to save the
-#  terminal output (stdout) and error (stderr) created by our job.
-#  Similarly, we need to name the log file where HTCondor will save
-#  information about job execution steps.
+# Specify the names of the log, error and output files used when running queued job
 log = demo.log
 error = demo.error
 output = demo.output
@@ -22,8 +19,10 @@ request_cpus = 1
 request_memory = 1 GB
 request_disk = 1 GB
 
-# Copy files to execution server
+# Copy demo files to execution server
 transfer_input_files = demo.sh, run_demo.sh, template_runscripts/conus2_transient_solid.yaml, demo.py, project.py
+
+# Copy zipped output files from the execution server back to home server
 transfer_output_files = output.tar.gz
 
 # The last line of a submit file indicates how many jobs of the above
