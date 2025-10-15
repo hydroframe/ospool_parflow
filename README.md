@@ -127,6 +127,9 @@ connected to the access point.
 This apptainer image was built using code in this repo.
 See [Building Apptainer Image](#building-a-parflow-apptainer-image) to build your own apptainer image.
 
+You do not have to build your own apptainer image. There is already a parflow image on
+the OSPool server and this is referenced in the .submit file in the demo example.
+
 
 # Clone the demo to the OSPool Server
 
