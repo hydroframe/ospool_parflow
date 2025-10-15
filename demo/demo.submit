@@ -1,6 +1,7 @@
 # Our executable is the main program or script that we've created
 # to do the 'work' of a single job.
-container_image = parflow_mpi.sif
+# Use the shared parflow container image from the "parflow" projects folder
+container_image = /ospool/uw-shared/projects/parflow/parflow_mpi_2025_10_01.sif
 executable = demo.sh
 
 
