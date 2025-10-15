@@ -1,6 +1,7 @@
 """
-Create and populate a parflow directory with input files and a runscript to be
-used by parflow to generate output simulation files for a subset domain.
+A module with a function "create_project" to create and populate a parflow
+directory with input files and a runscript to be used by parflow to generate
+output simulation files for a subset domain.
 
 This uses subsettools functions to create and populate the parflow directory.
 """
