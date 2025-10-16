@@ -29,7 +29,22 @@ Signup for OSPool office hours [here](https://docs.google.com/forms/d/e/1FAIpQLS
 
     Tuesdays, 4-5:30pm ET / 1-2:30pm PT
     Thursdays, 11:30am-1pm ET / 8:30-10am PT
-    
+
+# Overview of Signup Steps
+
+The instructions in the next sections give details about how to sign up, configure and run a simple parflow demo on OSPool. This is a short summmary of the those steps.
+
+    1. Signup for OSPool. Open an URL, fill out a form and request an account.
+
+    2. Register. Register your ssh certificate with your OSPool account to be able ssh connect.
+
+    3. Download ssh certificates. Download certificates to allow use of GIT on OSPool servers.
+
+    4. Clone Repo. Connect to OSPool with ssh and clone the demo repo to Server.
+
+    5. Configure hf_hydrodata email and pin with the demo.
+
+    6. Run the Parflow demo on OSPool server.
 
 ## Signup For OSPool
 To get an account to use OSPool you start by registering with the 
@@ -59,7 +74,7 @@ However, you may be assigned a different access point.
 
 I was given 41 GB of disk space quota when I signed up. You could negotiate for more with a good reason I think.
 
-### Certificate based Connection
+## Register for SSH Connection
 
 The instruction from the OSPool email will tell you to click [here](https://portal.osg-htc.org/documentation/overview/account_setup/comanage-access/) for instructions to connect to OSPool.
 These instructions give you options to connect with a browser based connection or an ssh key.
@@ -84,7 +99,8 @@ Use the username and accesspoint server name emailed to you by OSPool.
 
 You also should be able to copy files to the access point server using scp.
 
-Use this ability to copy your public/private keys to the access point server so you
+## Copy Certificate to Allow Git
+Use the ability to SSH  to copy your public/private keys to the access point server using scp so you
 can use GIT on OSPool server to clone workspaces and commit code from the OSPool access point.
 
 From your laptop or linux machine.
@@ -96,24 +112,13 @@ From your laptop or linux machine.
 
 With these keys on the OSPool access point you can clone and commit Git repos from the accesspoint.
 
-### Visual Studio Code
+## Visual Studio Code
 
 Once you have setup the certificate based connection ability you should be
 able to use Visual Studio Code to connect to the OSPool server from your laptop.
 You can use this IDE to edit files on the OSPool access point server and a terminal to submit OSPool jobs.
 
-### Clone Examples
-
-You should also be able to use git clone while logged on the access point to pull code to the
-access point. In particular you should be able to pull a copy of this repo with the examples
-to the access point. Connect to the access point with ssh or with Visual Studio Code and a terminal window
-and then execute this command to clone the repo with the examples.
-
-    mkdir -p ~/workspaces
-    cd ~/workspaces
-    git clone git@github.com:hydroframe/ospool_parflow.git
-
-# Apptainer
+## Apptainer
 
 OSPool uses apptainer to support users to deploy software to their servers.
 This is how we run parflow on OSPool servers.
@@ -131,7 +136,7 @@ You do not have to build your own apptainer image. There is already a parflow im
 the OSPool server and this is referenced in the .submit file in the demo example.
 
 
-# Clone the demo to the OSPool Server
+## Clone the demo to the OSPool Server
 
 To run the demonstration using parflow on an OSPool server you must clone the example repo to your
 access point. 
