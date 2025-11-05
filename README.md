@@ -99,18 +99,32 @@ Use the username and accesspoint server name emailed to you by OSPool.
 
 You also should be able to copy files to the access point server using scp.
 
-## Copy Certificate to Allow Git
-Use the ability to SSH  to copy your public/private keys to the access point server using scp so you
-can use GIT on OSPool server to clone workspaces and commit code from the OSPool access point.
+## Generate a public/private key to Allow Git Clone
+We want to be able to clone a Git repo to OSPool so you need to generate keys to use with Git Hub.
 
-From your laptop or linux machine.
+Connect to OSPool using ssh
 
-    cd
-    cd .ssh
-    scp id_ed25519.pub <username>@<accesspoint>:/home/<username>/.ssh
-    scp id_ed25519 <username>@<accesspoint>:/home/<username>/.ssh
+    ssh <username>@<accesspoint>
 
-With these keys on the OSPool access point you can clone and commit Git repos from the accesspoint.
+Set current directory to .ssh and generate keys and change the permissions of files to only visible to you.
+
+    cd ~/.ssh
+    ssh-keygen -t ed25519 -C “your-email@domain”
+    chmod 700 *
+
+This will generate files id_ed25519.pub, id_ed25519.
+
+Browse and sign in to your github account:
+    https://github.com/youraccount
+
+* Use the button in top right corner of the GitHub page get menu items and select "Settings". 
+
+* Select "SSH and GPG keys". Press button "New SSH key".
+* Paste a copy the file "id_ed25529.pub" (your public key) into the Key text field. This is probably a line that starts with "ssh-ed25519".
+* Enter a name in the "Title" of the GitHub Setting "Add SSH Key" dialog. This is just a reminder for you the reason for this key.
+* Press "Add SSH Key".
+
+After this you should be able to git clone a repo to your account on OSPool.
 
 ## Visual Studio Code
 
