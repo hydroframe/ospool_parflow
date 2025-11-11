@@ -55,7 +55,7 @@ OSPool. This is a zoom meeting where an OSPool support engineer will give you an
 overview of OSPool and ask you how you are trying to use it. They will also help you with
 getting started questions. 
 
-The email response after you submit your signup request will have instructions. It will tell
+The email response after you submit your signup request will have instructions (please check your Spam folder for a reply). It will tell
 you go to this link [schedule appointment](https://osgfacilitation.setmore.com/?utm_source=email&utm_medium=bookingpage). You select "Reseacher Consultation for OSG Access Point" and
 pick a day and time for your appointment.
 
